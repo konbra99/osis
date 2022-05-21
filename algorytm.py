@@ -90,7 +90,7 @@ def insertionSort(parameters, sorted):
 
 
 def algorithm(file, verbose=False):
-    parameters = buildParametersFromFile('instances/example.txt')
+    parameters = buildParametersFromFile(file)
     sums = summedJobTimes(parameters)
     sortedTimes = sortTimes(sums)
     sequence, makespan = insertionSort(parameters, sortedTimes)
