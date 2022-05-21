@@ -11,11 +11,15 @@ def saveTestData(folder, number_of_jobs, number_of_machines, array):
                 file.write(str(job) + " ")
 
 
+def generateFile(folder, number_of_jobs, number_of_machines, pmin, pmax):
+    jobs = np.random.randint(
+        pmin, pmax, (number_of_machines, number_of_jobs))
+    saveTestData(folder, number_of_jobs, number_of_machines, jobs)
+
+
 def generateRandomJobs(folder, number_of_machines, pmin, pmax):
-    number_of_jobs = np.random.randint(
-        pmin, pmax, (number_of_machines, np.random.randint(5, 50)))
-    saveTestData(folder, len(
-        number_of_jobs[0]), number_of_machines, number_of_jobs)
+    generateFile(folder, np.random.randint(5, 50),
+                 number_of_machines, pmin, pmax)
 
 
 def createRandomJobsFolder(name, machines, repeat=10):
@@ -31,10 +35,7 @@ def createRandomJobsExperiment():
 
 
 def generateRandomMachines(folder, number_of_jobs, pmin, pmax):
-    number_of_machines = np.random.randint(
-        pmin, pmax, (np.random.randint(1, 500), number_of_jobs))
-    saveTestData(folder, number_of_jobs, len(
-        number_of_machines), number_of_machines)
+    generateFile(folder, number_of_jobs, np.random.randint(1, 500), pmin, pmax)
 
 
 def createRandomMachinesFolder(name, jobs, repeat=10):
@@ -49,6 +50,21 @@ def createRandomMachinesExperiment():
         createRandomMachinesFolder(f'jobs_{jobs}', jobs)
 
 
+def createLengthGroup(folder, pmin, pmax):
+    os.mkdir(folder)
+    jobSizes = [5, 10, 20, 30, 50]
+    machineSizes = [5, 10, 20]
+    for n in jobSizes:
+        for m in machineSizes:
+            generateFile(folder, n, m, pmin, pmax)
+
+
+def createGroupsExperiment():
+    createLengthGroup('short_tests', 1, 10)
+    createLengthGroup('long_tests', 50, 150)
+
+
 if __name__ == '__main__':
-    createRandomJobsExperiment()
-    createRandomMachinesExperiment()
+    #createRandomJobsExperiment()
+   # createRandomMachinesExperiment()
+    createGroupsExperiment()
