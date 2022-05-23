@@ -34,8 +34,8 @@ def plotTime(parameter, data, title):
     plt.savefig(title + ' czas.png')
 
 
-if __name__ == '__main__':
-    results = pandas.read_csv('wyniki.csv', sep=';')
+def singleParameterPlot(file):
+    results = pandas.read_csv('grupy.csv', sep=';')
     print(results)
 
     randomMachines = results[:6]
@@ -43,3 +43,10 @@ if __name__ == '__main__':
 
     plotData(randomMachines, 'losowej liczby maszyn')
     plotData(randomJobs, 'losowej liczby zadań')
+
+
+
+if __name__ == '__main__':
+    short = pandas.read_csv('short.csv')
+    long = pandas.read_csv('long.csv')
+    

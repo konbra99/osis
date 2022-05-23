@@ -2,8 +2,11 @@ import os
 import numpy as np
 
 
-def saveTestData(folder, number_of_jobs, number_of_machines, array):
-    with open(f'{folder}/m_{number_of_machines}_n_{number_of_jobs}', "w+") as file:
+def saveTestData(folder, number_of_jobs, number_of_machines, array, title=None):
+    if title == None:
+        title = f'm_{number_of_machines}_n_{number_of_jobs}'
+    path = os.path.join(folder, title)
+    with open(path, "w+") as file:
         file.write(str(number_of_jobs) + " " + str(number_of_machines))
         for jobs in array:
             file.write('\n')
@@ -11,10 +14,10 @@ def saveTestData(folder, number_of_jobs, number_of_machines, array):
                 file.write(str(job) + " ")
 
 
-def generateFile(folder, number_of_jobs, number_of_machines, pmin, pmax):
+def generateFile(folder, number_of_jobs, number_of_machines, pmin, pmax, title=None):
     jobs = np.random.randint(
         pmin, pmax, (number_of_machines, number_of_jobs))
-    saveTestData(folder, number_of_jobs, number_of_machines, jobs)
+    saveTestData(folder, number_of_jobs, number_of_machines, jobs, title=title)
 
 
 def generateRandomJobs(folder, number_of_machines, pmin, pmax):
@@ -51,12 +54,14 @@ def createRandomMachinesExperiment():
 
 
 def createLengthGroup(folder, pmin, pmax):
-    os.mkdir(folder)
     jobSizes = [5, 10, 20, 30, 50]
     machineSizes = [5, 10, 20]
     for n in jobSizes:
         for m in machineSizes:
-            generateFile(folder, n, m, pmin, pmax)
+            path = os.path.join(folder, f'{n}_{m}')
+            os.makedirs(path)
+            for i in range(10):
+                generateFile(path, n, m, pmin, pmax, title=str(i))
 
 
 def createGroupsExperiment():
