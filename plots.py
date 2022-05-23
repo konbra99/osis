@@ -2,51 +2,54 @@ import pandas
 import matplotlib.pyplot as plt
 
 
-def plotData(data, title):
-    parameter = data['parameter']
-    plotMakespan(parameter, data, title)
-    plotTime(parameter, data, title)
+def plotData(dataAlgo, dataSolver, title):
+    parameter = dataAlgo['parameter']
+    plot(parameter, dataAlgo, dataSolver, 'time', f'Czas [s] - {title}', f'Czas [s] - {title}.png')
+    plot(parameter, dataAlgo, dataSolver, 'makespan', f'Makespan - {title}', f'Makespan - {title}.png')
 
 
-def plotMakespan(parameter, data, title):
-    minMakespan = data['min_makespan']
-    avgMakespan = data['avg_makespan']
-    maxMakespan = data['max_makespan']
+def plot(parameter, dataAlgo, dataSolver, col, title, file):
+    min = f'min_{col}'
+    avg = f'avg_{col}'
+    max = f'max_{col}'
+    minAlgo = dataAlgo[min]
+    avgAlgo = dataAlgo[avg]
+    maxAlgo = dataAlgo[max]
+    minSolver = dataSolver[min]
+    avgSolver = dataSolver[avg]
+    maxSolver = dataSolver[max]
+    
     plt.clf()
-    plt.title(f'Makespan przy {title}')
-    plt.plot(parameter, minMakespan, label='Minimum')
-    plt.plot(parameter, avgMakespan, label='Average')
-    plt.plot(parameter, maxMakespan, label='Maximum')
+    plt.title(title)
+    plt.plot(parameter, minAlgo, label='Minimum Algorithm')
+    plt.plot(parameter, avgAlgo, label='Average Algorithm')
+    plt.plot(parameter, maxAlgo, label='Maximum Algorithm')
+    plt.plot(parameter, minSolver, label='Minimum Solver')
+    plt.plot(parameter, avgSolver, label='Average Solver')
+    plt.plot(parameter, maxSolver, label='Maximum Solver')
     plt.legend()
-    plt.savefig(title + ' makespan.png')
+    plt.savefig(file)
 
 
-def plotTime(parameter, data, title):
-    minTime = data['min_time']
-    avgTime = data['avg_time']
-    maxTime = data['max_time']
-    plt.clf()
-    plt.title(f'Czas przetwarzania (w sekundach) dla {title}')
-    plt.plot(parameter, minTime, label='Minimum')
-    plt.plot(parameter, avgTime, label='Average')
-    plt.plot(parameter, maxTime, label='Maximum')
-    plt.legend()
-    plt.savefig(title + ' czas.png')
+def singleParameterPlot(fileAlgo, fileSolver):
+    resultsAlgo = fileResults(fileAlgo, '-- Algo -----')
+    resultsSolver = fileResults(fileSolver, '-- Solver ----')
+
+    plotData(resultsAlgo[0], resultsSolver[0], 'losowa liczba maszyn')
+    plotData(resultsAlgo[1], resultsSolver[1], 'losowa liczba zadań')
 
 
-def singleParameterPlot(file):
-    results = pandas.read_csv('grupy.csv', sep=';')
+def fileResults(file, text):
+    results = pandas.read_csv(file, sep=';')
+    print(text)
     print(results)
 
-    randomMachines = results[:6]
-    randomJobs = results[6:]
-
-    plotData(randomMachines, 'losowej liczby maszyn')
-    plotData(randomJobs, 'losowej liczby zadań')
-
+    randomMachines = results[results['type'] == 'jobs']
+    randomJobs = results[results['type'] == 'machines']
+    return randomMachines, randomJobs
 
 
 if __name__ == '__main__':
-    short = pandas.read_csv('short.csv')
-    long = pandas.read_csv('long.csv')
-    
+    # short = pandas.read_csv('short.csv')
+    # long = pandas.read_csv('long.csv')
+    singleParameterPlot('wyniki_algo.csv', 'wyniki_solver.csv')
