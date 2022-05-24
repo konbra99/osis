@@ -8,11 +8,11 @@ class Parameters:
     p = []
 
 
-def main():
-    buildParametersFromFile(sys.argv[1])
+def solverAlgorithm(file):
+    buildParametersFromFile(file)
     with localsolver.LocalSolver() as localSolver:
         Parameters.p = timesToModelArray(localSolver.model)
-        solve(localSolver)
+        return solve(localSolver)
 
 
 def buildParametersFromFile(filename):
@@ -34,17 +34,10 @@ def timesToModelArray(model):
 
 
 def solve(localSolver):
-    jobs, makespan = constructModel(localSolver)
+    _, makespan = constructModel(localSolver)
     localSolver.param.time_limit = 5
     localSolver.solve()
-
-    if len(sys.argv) >= 3:
-        with open(sys.argv[2], 'w') as f:
-            f.write("%d\n" % makespan.value)
-            for i in range(len(jobs)):
-                for j in jobs[i].value:
-                    f.write("%d " % (j + 1))
-                f.write("\n")
+    return makespan.value
 
 
 def constructModel(localSolver):
@@ -85,6 +78,6 @@ def nextMachineFinishTimes(model, jobs, C, i):
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
-        main()
+        solverAlgorithm(sys.argv[1])
     else:
-        print("Usage: python flowshop.py inputFile [outputFile] [timeLimit]")
+        print("Usage: python flowshop.py inputFile [outputFile]")

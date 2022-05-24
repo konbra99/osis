@@ -54,8 +54,8 @@ def createRandomMachinesExperiment():
 
 
 def createLengthGroup(folder, pmin, pmax):
-    jobSizes = [5, 10, 20, 30, 50]
-    machineSizes = [5, 10, 20]
+    jobSizes = [5, 10, 20, 30, 50, 100]
+    machineSizes = [5, 10, 20, 30, 40, 50]
     for n in jobSizes:
         for m in machineSizes:
             path = os.path.join(folder, f'{n}_{m}')
@@ -66,7 +66,7 @@ def createLengthGroup(folder, pmin, pmax):
 
 def createGroupsExperiment():
     createLengthGroup('short_tests', 1, 10)
-    createLengthGroup('long_tests', 50, 150)
+    createLengthGroup('long_tests', 100, 200)
 
 
 if __name__ == '__main__':
